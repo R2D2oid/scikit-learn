@@ -207,7 +207,7 @@ class LeavePOut(BaseCrossValidator):
     Parameters
     ----------
     p : int
-        Size of the test sets. Must be strictly greater than the number of
+        Size of the test sets. Must be strictly less than the number of
         samples.
 
     Examples
@@ -1075,7 +1075,7 @@ class _RepeatedSplits(metaclass=ABCMeta):
         and shuffle.
     """
     def __init__(self, cv, n_repeats=10, random_state=None, **cvargs):
-        if not isinstance(n_repeats, (np.integer, numbers.Integral)):
+        if not isinstance(n_repeats, numbers.Integral):
             raise ValueError("Number of repetitions must be of Integral type.")
 
         if n_repeats <= 0:
@@ -1448,10 +1448,13 @@ class GroupShuffleSplit(ShuffleSplit):
 
     test_size : float, int, None, optional (default=None)
         If float, should be between 0.0 and 1.0 and represent the proportion
-        of the dataset to include in the test split. If int, represents the
-        absolute number of test groups. If None, the value is set to the
-        complement of the train size. If ``train_size`` is also None, it will
-        be set to 0.2.
+        of groups to include in the test split (rounded up). If int,
+        represents the absolute number of test groups. If None, the value is
+        set to the complement of the train size. By default, the value is set
+        to 0.2.
+        The default will change in version 0.21. It will remain 0.2 only
+        if ``train_size`` is unspecified, otherwise it will complement
+        the specified ``train_size``.
 
     train_size : float, int, or None, default is None
         If float, should be between 0.0 and 1.0 and represent the
